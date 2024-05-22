@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recursive Partitioning</title>
+  </head>
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+    }
+    .container {
+      width: 80vw;
+      height: 80vh;
+      border: 1px solid #ccc;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .partition {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #000;
+      box-sizing: border-box;
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+    }
+    .controls {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: flex;
+      gap: 5px;
+    }
+    .controls button {
+      padding: 5px;
+    }
+  </style>
+  <body>
+    <div class="container" id="container">
+      <div class="partition" id="partition1" style="background: lightblue">
+        <div class="controls">
+          <button onclick="splitPartition('partition1', 'V')">V</button>
+          <button onclick="splitPartition('partition1', 'H')">H</button>
+          <button onclick="removePartition('partition1')">-</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      let partitionCounter = 1;
+
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      function splitPartition(partitionId, direction) {
+        const partition = document.getElementById(partitionId);
+        const parent = partition.parentElement;
+        const newPartitionId = `partition${++partitionCounter}`;
+
+        const newPartition = document.createElement("div");
+        newPartition.className = "partition";
+        newPartition.id = newPartitionId;
+        newPartition.style.background = getRandomColor();
+        newPartition.innerHTML = `
+                <div class="controls">
+                    <button onclick="splitPartition('${newPartitionId}', 'V')">V</button>
+                    <button onclick="splitPartition('${newPartitionId}', 'H')">H</button>
+                    <button onclick="removePartition('${newPartitionId}')">-</button>
+                </div>
+            `;
+
+        const wrapper = document.createElement("div");
+        wrapper.style.display = "flex";
+        wrapper.style.flex = "1";
+        wrapper.style.flexDirection = direction === "V" ? "row" : "column";
+        wrapper.appendChild(partition.cloneNode(true));
+        wrapper.appendChild(newPartition);
+
+        parent.replaceChild(wrapper, partition);
+      }
+
+      function removePartition(partitionId) {
+        const partition = document.getElementById(partitionId);
+        const parent = partition.parentElement;
+        if (parent.parentElement && parent.children.length === 2) {
+          const sibling =
+            parent.children[0] === partition
+              ? parent.children[1]
+              : parent.children[0];
+          parent.parentElement.replaceChild(sibling, parent);
+        } else if (parent.parentElement) {
+          parent.parentElement.removeChild(partition);
+        }
+      }
+    </script>
+  </body>
+</html>

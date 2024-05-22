@@ -1,0 +1,32 @@
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.tile {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tile:hover {
+  background-color: #ddd;
+}
+
+#outputString {
+  margin-top: 20px;
+  font-size: 24px;
+  font-family: monospace;
+}
